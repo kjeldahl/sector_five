@@ -37,6 +37,7 @@ class SectorFive < Gosu::Window
   	@player.update
   	@enemies.each &:update
     @bullets.each &:update
+    @explosions.reject! &:finished
     @explosions.each &:update
 
     # Spawn Enemy
@@ -51,7 +52,7 @@ class SectorFive < Gosu::Window
         if Gosu.distance(enemy.x, enemy.y, bullet.x, bullet.y) < enemy.radius + bullet.radius
           @bullets.delete bullet
           @enemies.delete enemy
-          @explosions << Explosion.new(self, enemy.x, enemy.y)
+          @explosions << Explosion.new(self, enemy.x, enemy.y, (enemy.angle + bullet.angle) / 2)
         end
 
       end
@@ -68,5 +69,5 @@ class SectorFive < Gosu::Window
 
 end
 
-window = SectorFive.new
+window = SectorFive.new 
 window.show

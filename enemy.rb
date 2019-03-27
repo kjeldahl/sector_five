@@ -14,8 +14,12 @@ class Enemy
 		@speed = SPEED + rand(4) - 2
 	end
 
+	def angle
+		@direction < 0 ? 0 : 180
+	end
+
 	def draw
-		@image.draw_rot(@x, @y, 1, @direction < 0 ? 180 : 0)
+		@image.draw_rot(@x, @y, 1, angle)
 	end
 
 	def update

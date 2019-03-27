@@ -1,11 +1,14 @@
 class Explosion
 
+	SPEED = 2
+
 	attr_reader :finished
 
-	def initialize(window, x, y)
+	def initialize(window, x, y, angle)
 		@window = window
 		@x = x
 		@y = y
+		@angle = angle
 		@radius = 30
 	    @images = Gosu::Image.load_tiles('images/explosions.png', 60, 60)
 	    @image_index = 0
@@ -17,6 +20,8 @@ class Explosion
 	end
 
 	def move
+		@x += Gosu.offset_x(@angle, SPEED)
+		@y += Gosu.offset_y(@angle, SPEED)
 	end
 
 	def draw
