@@ -9,27 +9,63 @@
 require 'gosu'
 require_relative "player"
 require_relative "enemy"
+require_relative "bullet"
+require_relative "explosion"
 
 class SectorFive < Gosu::Window
 	WIDTH  = 800
 	HEIGHT = 600
+  ENEMY_FREQUENCY = 0.05
 
   def initialize
     super(WIDTH, HEIGHT)
     self.caption = 'Sector Five'
     @player = Player.new(self)
-    @enemies = 10.times.map { Enemy.new(self) }
+    @enemies = []
+    @bullets = []
+    @explosions = []
   end
 
   def draw
   	@player.draw
   	@enemies.each &:draw
+    @bullets.each &:draw
+    @explosions.each &:draw
   end
 
   def update
   	@player.update
   	@enemies.each &:update
+    @bullets.each &:update
+    @explosions.each &:update
+
+    # Spawn Enemy
+    if rand < ENEMY_FREQUENCY
+      @enemies << Enemy.new(self)
+    end
+
+    # Collision detection
+    @enemies.dup.each do |enemy|
+      @bullets.dup.each do |bullet|
+        
+        if Gosu.distance(enemy.x, enemy.y, bullet.x, bullet.y) < enemy.radius + bullet.radius
+          @bullets.delete bullet
+          @enemies.delete enemy
+          @explosions << Explosion.new(self, enemy.x, enemy.y)
+        end
+
+      end
+    end
+
   end
+
+  def button_down(id)
+    # Shoot bullets
+    if id == Gosu::KbSpace
+      @bullets << Bullet.new(self, @player.x, @player.y, @player.angle)
+    end
+  end
+
 end
 
 window = SectorFive.new

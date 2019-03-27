@@ -4,6 +4,8 @@ class Player
 	FRICTION       = 0.9
 	ROTATION_SPEED = 5
 
+	attr_reader :x, :y, :angle, :radius
+	
 	def initialize(window)
 		@x = 200
 		@y = 200
