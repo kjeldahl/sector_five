@@ -37,7 +37,6 @@ class SectorFive < Gosu::Window
   	@player.update
   	@enemies.each &:update
     @bullets.each &:update
-    @explosions.reject! &:finished
     @explosions.each &:update
 
     # Spawn Enemy
@@ -46,24 +45,32 @@ class SectorFive < Gosu::Window
     end
 
     # Collision detection
-    @enemies.dup.each do |enemy|
-      @bullets.dup.each do |bullet|
+    enemies_and_bullets_to_remove = []
+    @enemies.each do |enemy|
+      @bullets.each do |bullet|
         
         if Gosu.distance(enemy.x, enemy.y, bullet.x, bullet.y) < enemy.radius + bullet.radius
-          @bullets.delete bullet
-          @enemies.delete enemy
-          @explosions << Explosion.new(self, enemy.x, enemy.y, (enemy.angle + bullet.angle) / 2)
+          enemies_and_bullets_to_remove << bullet
+          enemies_and_bullets_to_remove << enemy	
+          @explosions << Explosion.new(self, enemy.x, enemy.y, Explosion.calculate_angle(enemy,bullet))
         end
 
       end
     end
 
+    # Clean up
+    enemies_and_bullets_to_remove.each do |to_delete|
+    	@enemies.delete to_delete
+    	@bullets.delete to_delete
+    end
+    @explosions.reject! &:finished
+    @bullets.reject! &:off_screen
   end
 
   def button_down(id)
     # Shoot bullets
     if id == Gosu::KbSpace
-      @bullets << Bullet.new(self, @player.x, @player.y, @player.angle)
+      @bullets << Bullet.new(self, @player.x, @player.y, @player.angle, @player.speed)
     end
   end
 

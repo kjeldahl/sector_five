@@ -4,6 +4,12 @@ class Explosion
 
 	attr_reader :finished
 
+	class << self
+		def calculate_angle(enemy, bullet)
+			bullet.angle
+		end
+    end
+
 	def initialize(window, x, y, angle)
 		@window = window
 		@x = x

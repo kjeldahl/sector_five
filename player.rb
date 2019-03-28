@@ -22,7 +22,7 @@ class Player
 	end
 
 	def update
-		turn_left if @window.button_down?(Gosu::KbLeft)
+		turn_left  if @window.button_down?(Gosu::KbLeft)
   		turn_right if @window.button_down?(Gosu::KbRight)
   		accelerate if @window.button_down?(Gosu::KbUp)
 
@@ -31,15 +31,22 @@ class Player
 
 	def turn_right
 		@angle += ROTATION_SPEED
+		@angle %= 360
 	end
 
 	def turn_left
 		@angle -= ROTATION_SPEED
+		@angle += 360 # Make positive
+		@angle %= 360 # Make between 0 and 360
 	end
 
 	def accelerate
 		@velocity_x += Gosu.offset_x(@angle, ACCELERATION)
 		@velocity_y += Gosu.offset_y(@angle, ACCELERATION)
+	end
+
+	def speed
+		Math.sqrt(@velocity_x.abs ** 2 + @velocity_y ** 2)
 	end
 
 	def move
@@ -52,10 +59,12 @@ class Player
 			@velocity_x = 0
 			@x = @window.width - @radius
 		end
+
 		if @x < @radius
 			@velocity_x = 0
 			@x = @radius
 		end
+
 		if @y > @window.height - @radius
 			@velocity_y = 0
 			@y = @window.height - @radius

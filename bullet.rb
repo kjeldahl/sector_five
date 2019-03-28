@@ -1,14 +1,15 @@
 class Bullet
 
-	SPEED = 5
+	SPEED = 10
 
-	attr_reader :x, :y, :angle, :radius
+	attr_reader :x, :y, :angle, :radius, :off_screen
 
-	def initialize(window, x, y, angle)
+	def initialize(window, x, y, angle, speed)
 		@window = window
 		@x = x
 		@y = y
-		@angle = angle
+		@angle = angle % 360
+		@speed = speed + SPEED
 		@image = Gosu::Image.new("images/bullet.png")
 		@radius = 3
 	end
@@ -22,7 +23,10 @@ class Bullet
 	end
 
 	def move
-		@x += Gosu.offset_x(@angle, SPEED)
-		@y += Gosu.offset_y(@angle, SPEED)
+		@x += Gosu.offset_x(@angle, @speed)
+		@y += Gosu.offset_y(@angle, @speed)
+
+		on_screen = (-@radius..(@window.width+@radius)).cover?(@x) && (-@radius..(@window.height+@radius)).cover?(@y)
+		@off_screen = !on_screen
 	end
 end
