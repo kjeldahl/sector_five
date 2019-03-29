@@ -22,6 +22,8 @@ class Player
 		@killed = true
 	end
 
+	alias_method :killed?, :killed
+
 	def draw
 		@image.draw_rot(@x, @y, 1, @angle) unless killed
 	end
@@ -29,10 +31,10 @@ class Player
 	def update
 		return if killed
 		turn_left  if @window.button_down?(Gosu::KbLeft)
-  		turn_right if @window.button_down?(Gosu::KbRight)
-  		accelerate if @window.button_down?(Gosu::KbUp)
+		turn_right if @window.button_down?(Gosu::KbRight)
+		accelerate if @window.button_down?(Gosu::KbUp)
 
-  		move
+		move
 	end	
 
 	def turn_right
@@ -74,6 +76,11 @@ class Player
 		if @y > @window.height - @radius
 			@velocity_y = 0
 			@y = @window.height - @radius
+		end
+
+		if @y < @radius
+			@velocity_y = 0
+			@y = @radius
 		end
 	end
 

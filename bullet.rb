@@ -1,7 +1,5 @@
 class Bullet
 
-	SPEED = 10
-
 	attr_reader :x, :y, :angle, :radius, :off_screen
 
 	def initialize(window, x, y, angle, speed)
@@ -9,9 +7,13 @@ class Bullet
 		@x = x
 		@y = y
 		@angle = angle % 360
-		@speed = speed + SPEED
+		@speed = speed + bullet_speed
 		@image = Gosu::Image.new("images/bullet.png")
 		@radius = 3
+	end
+
+	def bullet_speed
+		10
 	end
 
 	def draw
