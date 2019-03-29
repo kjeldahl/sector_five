@@ -18,6 +18,7 @@ class Explosion
 		@radius = 30
 	    @images = Gosu::Image.load_tiles('images/explosions.png', 60, 60)
 	    @image_index = 0
+	    @frame_count = 0
 	    @finished = false 
 	end
 
@@ -33,7 +34,9 @@ class Explosion
 	def draw
 		unless finished
 			@images[@image_index].draw(@x - @radius, @y - @radius, 1)
-			@image_index += 1
+			@frame_count += 1
+			@image_index = @frame_count / 5
+
 			@finished = @image_index == @images.size
 		end
 	end
