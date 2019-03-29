@@ -7,22 +7,26 @@
 # Visit http://www.pragmaticprogrammer.com/titles/msgpkids for more book information.
 #---
 require 'gosu'
-require_relative "player"
-require_relative "enemy"
 require_relative "bullet"
+require_relative "enemy"
+require_relative "enemy_bullet"
 require_relative "explosion"
+require_relative "player"
 
 class SectorFive < Gosu::Window
-	WIDTH  = 800
+	
+  WIDTH  = 800
 	HEIGHT = 600
-  ENEMY_FREQUENCY = 0.05
-
+  ENEMY_FREQUENCY = 0.005
+  ENEMY_SHOOT_FREQUENCY = 0.005
+  
   def initialize
     super(WIDTH, HEIGHT)
     self.caption = 'Sector Five'
     @player = Player.new(self)
     @enemies = []
     @bullets = []
+    @enemy_bullets = []
     @explosions = []
   end
 
@@ -30,6 +34,7 @@ class SectorFive < Gosu::Window
   	@player.draw
   	@enemies.each &:draw
     @bullets.each &:draw
+    @enemy_bullets.each &:draw
     @explosions.each &:draw
   end
 
@@ -37,14 +42,22 @@ class SectorFive < Gosu::Window
   	@player.update
   	@enemies.each &:update
     @bullets.each &:update
+    @enemy_bullets.each &:update
     @explosions.each &:update
 
     # Spawn Enemy
-    if rand < ENEMY_FREQUENCY
+    if rand < ENEMY_FREQUENCY && !@player.killed
       @enemies << Enemy.new(self)
     end
 
-    # Collision detection
+    # Enemy Shoot
+    @enemies.each do |enemy|
+      if rand < ENEMY_SHOOT_FREQUENCY
+        @enemy_bullets << EnemyBullet.new(self, enemy.x, enemy.y, Gosu.angle(enemy.x, enemy.y, @player.x, @player.y), enemy.speed)
+      end
+    end
+
+    # Collision detection enemies and bullet
     enemies_and_bullets_to_remove = []
     @enemies.each do |enemy|
       @bullets.each do |bullet|
@@ -57,14 +70,29 @@ class SectorFive < Gosu::Window
 
       end
     end
+ 
+    # Collision detection player and enemy bullets
+    @enemy_bullets.each do |bullet|
+      
+      if Gosu.distance(@player.x, @player.y, bullet.x, bullet.y) < @player.radius + bullet.radius
+        enemies_and_bullets_to_remove << bullet
+        enemies_and_bullets_to_remove << @player
+        @player.kill!
+        @explosions << Explosion.new(self, @player.x, @player.y, Explosion.calculate_angle(@player,bullet))
+      end
+
+    end
 
     # Clean up
     enemies_and_bullets_to_remove.each do |to_delete|
     	@enemies.delete to_delete
     	@bullets.delete to_delete
+      @enemy_bullets.delete to_delete
     end
+
     @explosions.reject! &:finished
     @bullets.reject! &:off_screen
+    @enemy_bullets.reject! &:off_screen
   end
 
   def button_down(id)

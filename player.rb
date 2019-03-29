@@ -4,7 +4,7 @@ class Player
 	FRICTION       = 0.9
 	ROTATION_SPEED = 5
 
-	attr_reader :x, :y, :angle, :radius
+	attr_reader :x, :y, :angle, :radius, :killed
 	
 	def initialize(window)
 		@x = 200
@@ -15,13 +15,19 @@ class Player
 		@velocity_x = 0
 		@velocity_y = 0
 		@radius = 20
+		@killed = false
+	end
+
+	def kill!
+		@killed = true
 	end
 
 	def draw
-		@image.draw_rot(@x, @y, 1, @angle)
+		@image.draw_rot(@x, @y, 1, @angle) unless killed
 	end
 
 	def update
+		return if killed
 		turn_left  if @window.button_down?(Gosu::KbLeft)
   		turn_right if @window.button_down?(Gosu::KbRight)
   		accelerate if @window.button_down?(Gosu::KbUp)
