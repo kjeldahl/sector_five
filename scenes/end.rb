@@ -10,6 +10,8 @@ module Scenes
       @window = window
       @game_state = game_state
       @game_state.reset = nil
+      @music = Gosu::Song.new('sounds/FromHere.ogg')
+      @music.play(true)
 
       case @game_state.fate
       when :count_reached
@@ -31,6 +33,10 @@ module Scenes
         @credits.push(Credit.new(@window, line.chomp, 100, y))
         y += 30
       end
+    end
+
+    def end!
+      @music.stop
     end
 
     def draw

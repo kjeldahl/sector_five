@@ -31,6 +31,7 @@ class SectorFive < Gosu::Window
   def update
     @scene.update
     if @scene.done?
+        @scene.end! if @scene.respond_to? :end!
         if @scene.is_a? Scenes::Start
           @scene = Scenes::Game.new(self, @game_state)
         elsif @scene.is_a? Scenes::Game

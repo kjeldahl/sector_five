@@ -27,11 +27,20 @@ module Scenes
 	    @game_state.enemies_appeared = 0
 	    @game_state.enemies_destroyed = 0
 
+	    @music = Gosu::Song.new('sounds/Cephalopod.ogg')
+	    @music.play(true)
+
+	    @explosion_sound = Gosu::Sample.new('sounds/explosion.ogg')
+
 	    @done = false
 	  end
 
 	  def done?
 	  	!@game_state.fate.nil?
+	  end
+
+	  def end!
+	  	@music.stop
 	  end
 
 	  def draw
@@ -74,6 +83,7 @@ module Scenes
 	          enemies_and_bullets_to_remove << bullet
 	          enemies_and_bullets_to_remove << enemy
 	          @explosions << Explosion.new(@window, enemy.x, enemy.y, Explosion.calculate_angle(enemy,bullet))
+	          @explosion_sound.play
 	          @game_state.enemies_destroyed += 1
 	        end
 

@@ -5,6 +5,8 @@ module Scenes
       @window = window
       @game_state = game_state
 			@backgound_image = Gosu::Image.new("images/start_screen.png")
+			@start_music = Gosu::Song.new('sounds/Lost Frontier.ogg')
+			@start_music.play(true)
 			@done = false
 		end
 
@@ -21,6 +23,10 @@ module Scenes
 
 		def done?
 			@done
+		end
+
+		def end!
+			@start_music.stop
 		end
 	end
 end	
