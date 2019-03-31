@@ -39,17 +39,17 @@ module Scenes
 
       @window.draw_line(0, 140, Gosu::Color::RED, WIDTH, 140, Gosu::Color::RED)
       
-      @message_font.draw(@message, 40, 40, 1, 1, 1, Gosu::Color::FUCHSIA)
-      @message_font.draw(@message2, 40, 75, 1, 1, 1, Gosu::Color::FUCHSIA)
+      @message_font.draw_text(@message, 40, 40, 1, 1, 1, Gosu::Color::FUCHSIA)
+      @message_font.draw_text(@message2, 40, 75, 1, 1, 1, Gosu::Color::FUCHSIA)
 
       @window.draw_line(0, 500, Gosu::Color::RED, WIDTH, 500, Gosu::Color::RED)
 
-      @message_font.draw(@bottom_message, 180, 540, 1, 1, 1, Gosu::Color::AQUA)
+      @message_font.draw_text(@bottom_message, 180, 540, 1, 1, 1, Gosu::Color::AQUA)
     end
 
     def update
       @credits.each &:move
-      @credits.each ​&:reset if @credits.last.y < 150
+      @credits.each &:reset if @credits.last.y < 150  
     end
 
     def button_down(id)
