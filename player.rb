@@ -1,6 +1,7 @@
-require_relative 'single_shot_gun'
-require_relative 'tripple_shot_gun'
 require_relative 'fan_gun'
+require_relative 'single_shot_gun'
+require_relative 'three_shot_gun'
+require_relative 'tripple_shot_gun'
 
 class Player
 
@@ -100,6 +101,7 @@ class Player
 	    @gun = SingleShotGun.new(@window, self) if id == Gosu::Kb1
 	    @gun = TrippleShotGun.new(@window, self) if id == Gosu::Kb2
 	    @gun = FanGun.new(@window, self) if id == Gosu::Kb3
+	    @gun = ThreeShotGun.new(@window, self) if id == Gosu::Kb4
 	end
 
 end

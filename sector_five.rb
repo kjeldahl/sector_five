@@ -8,13 +8,6 @@
 #---
 require 'gosu'
 require 'ostruct'
-require_relative "bullet"
-require_relative "credit"
-require_relative "enemy"
-require_relative "enemy_bullet"
-require_relative "explosion"
-require_relative "life"
-require_relative "player"
 require_relative "scenes/end"
 require_relative "scenes/game"
 require_relative "scenes/start"

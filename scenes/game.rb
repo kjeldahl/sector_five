@@ -3,7 +3,7 @@ require_relative "../bullet"
 require_relative "../enemy"
 require_relative "../enemy_bullet"
 require_relative "../explosion"
-require_relative "../life"
+require_relative "../life_and_score"
 require_relative "../player"
 
 module Scenes
@@ -14,16 +14,16 @@ module Scenes
 	  MAX_ENEMIES = 10
 	  
 	  def initialize(window, game_state)
-      	@window = window
-      	@game_state = game_state
+      @window = window
+      @game_state = game_state
 	    @player = Player.new(window)
 	    @enemies = []
 	    @bullets = []
 	    @enemy_bullets = []
 	    @explosions = []
-	    @life_counter = Life.new(@window, '', @window.width / 2 - 100, 24, @player)
+	    @life_counter = LifeAndScore.new(@window, @player, @game_state)
 
-      	@game_state.fate = nil
+      @game_state.fate = nil
 	    @game_state.enemies_appeared = 0
 	    @game_state.enemies_destroyed = 0
 
