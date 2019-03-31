@@ -8,7 +8,7 @@ class ThreeShotGun
 
 	def shoot
 		[0, 5, 10].map do |delay|
-			DelayedBullet.new(@window, @player.x, @player.y, @player.angle, @player.speed, delay)
+			DelayedBullet.new(@window, @player, delay)
 		end
 	end
 end
