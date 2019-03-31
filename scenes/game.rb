@@ -3,6 +3,7 @@ require_relative "../bullet"
 require_relative "../enemy"
 require_relative "../enemy_bullet"
 require_relative "../explosion"
+require_relative "../life"
 require_relative "../player"
 
 module Scenes
@@ -13,15 +14,16 @@ module Scenes
 	  MAX_ENEMIES = 10
 	  
 	  def initialize(window, game_state)
-      @window = window
-      @game_state = game_state
+      	@window = window
+      	@game_state = game_state
 	    @player = Player.new(window)
 	    @enemies = []
 	    @bullets = []
 	    @enemy_bullets = []
 	    @explosions = []
+	    @life_counter = Life.new(@window, '', @window.width / 2 - 100, 24, @player)
 
-      @game_state.fate = nil
+      	@game_state.fate = nil
 	    @game_state.enemies_appeared = 0
 	    @game_state.enemies_destroyed = 0
 
@@ -38,6 +40,7 @@ module Scenes
 	    @bullets.each &:draw
 	    @enemy_bullets.each &:draw
 	    @explosions.each &:draw
+	    @life_counter.draw
 	  end
 
 	  def update
@@ -46,6 +49,7 @@ module Scenes
 	    @bullets.each &:update
 	    @enemy_bullets.each &:update
 	    @explosions.each &:update
+	    @life_counter.update
 
 	    # Spawn Enemy
 	    if rand < ENEMY_FREQUENCY && !@player.killed
@@ -57,7 +61,7 @@ module Scenes
 	    # Enemy Shoot
 	    @enemies.each do |enemy|
 	      if rand < ENEMY_SHOOT_FREQUENCY
-	        @enemy_bullets << EnemyBullet.new(@window, enemy.x, enemy.y, Gosu.angle(enemy.x, enemy.y, @player.x, @player.y), enemy.speed)
+	        @enemy_bullets << EnemyBullet.new(@window, enemy.x, enemy.y, Gosu.angle(enemy.x, enemy.y, @player.x, @player.y) + rand(20)-10, enemy.speed)
 	      end
 	    end unless @player.killed?
 
@@ -84,7 +88,7 @@ module Scenes
 	        enemies_and_bullets_to_remove << @player
 	        @player.kill!
 	        @explosions << Explosion.new(@window, @player.x, @player.y, Explosion.calculate_angle(@player,bullet))
-          @game_state.fate = :hit_by_enemy
+          @game_state.fate = :hit_by_enemy if @player.killed?
 	      end
 
 	    end
@@ -98,14 +102,19 @@ module Scenes
 
 	    @explosions.reject! &:finished
 	    @bullets.reject! &:off_screen
+	    @enemies.reject! &:off_screen
 	    @enemy_bullets.reject! &:off_screen
 	  end
 
 	  def button_down(id)
 	    # Shoot bullets
 	    if id == Gosu::KbSpace
-	      @bullets << Bullet.new(@window, @player.x, @player.y, @player.angle, @player.speed)
+	    	@player.shoot.each do |bullet|
+	    		@bullets << bullet
+	    	end
+	      # @bullets << Bullet.new(@window, @player.x, @player.y, @player.angle, @player.speed)
 	    end
+	    @player.button_down(id) if @player.respond_to? :button_down
 	  end
 
 	end

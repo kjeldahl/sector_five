@@ -2,7 +2,7 @@ class Enemy
 
 	SPEED = 4
 
-	attr_reader :x, :y, :radius, :speed
+	attr_reader :x, :y, :radius, :speed, :off_screen
 
 	def initialize(window)
 		@radius = 20
@@ -29,14 +29,18 @@ class Enemy
 	def move
 		@y += @speed * @direction
 
-		if @y > @window.height - @radius
-			@y = @window.height - @radius
-			@direction *= -1
-		end
-		if @y < @radius
-			@y = @radius
-			@direction *= -1
-		end
+		@off_screen = @y > @window.height + @radius
+
+
+		# Turn around
+		# if @y > @window.height - @radius
+		# 	@y = @window.height - @radius
+		# 	@direction *= -1
+		# end
+		# if @y < @radius
+		# 	@y = @radius
+		# 	@direction *= -1
+		# end
 	end
 end
 

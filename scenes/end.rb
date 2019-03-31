@@ -1,4 +1,5 @@
 require_relative '../credit'
+require_relative 'game'
 
 module Scenes
   class End
@@ -13,7 +14,7 @@ module Scenes
       case @game_state.fate
       when :count_reached
         @message = "You made it! You destroyed #{@game_state.enemies_destroyed} ships"
-        @message2= "and #{100 - @game_state.enemies_destroyed} reached the base."
+        @message2= "and #{Scenes::Game::MAX_ENEMIES - @game_state.enemies_destroyed} reached the base."
       when :hit_by_enemy
         @message = " You were struck by an enemy ship."
         @message2= "Before your ship was destroyed, "

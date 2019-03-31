@@ -1,10 +1,14 @@
+require_relative 'single_shot_gun'
+require_relative 'tripple_shot_gun'
+require_relative 'fan_gun'
+
 class Player
 
 	ACCELERATION   = 1.2
 	FRICTION       = 0.9
 	ROTATION_SPEED = 5
 
-	attr_reader :x, :y, :angle, :radius, :killed
+	attr_reader :x, :y, :angle, :radius, :killed, :lives
 	
 	def initialize(window)
 		@x = 200
@@ -16,10 +20,13 @@ class Player
 		@velocity_y = 0
 		@radius = 20
 		@killed = false
+		@lives = 3
+		@gun = SingleShotGun.new(window, self)
 	end
 
 	def kill!
-		@killed = true
+		@lives =  @lives - 1
+		@killed = true if @lives <= 0
 	end
 
 	alias_method :killed?, :killed
@@ -36,6 +43,10 @@ class Player
 
 		move
 	end	
+
+	def shoot
+		@gun.shoot
+	end
 
 	def turn_right
 		@angle += ROTATION_SPEED
@@ -82,6 +93,13 @@ class Player
 			@velocity_y = 0
 			@y = @radius
 		end
+	end
+
+	def button_down(id)
+		# Change gun
+	    @gun = SingleShotGun.new(@window, self) if id == Gosu::Kb1
+	    @gun = TrippleShotGun.new(@window, self) if id == Gosu::Kb2
+	    @gun = FanGun.new(@window, self) if id == Gosu::Kb3
 	end
 
 end
