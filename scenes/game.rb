@@ -1,10 +1,12 @@
 require 'gosu'
 require_relative "../bullet"
 require_relative "../enemy"
+require_relative "../enemy2"
 require_relative "../enemy_bullet"
 require_relative "../explosion"
 require_relative "../life_and_score"
 require_relative "../player"
+require_relative "../zig_zag_enemy"
 
 module Scenes
 	class Game
@@ -62,7 +64,7 @@ module Scenes
 
 	    # Spawn Enemy
 	    if rand < ENEMY_FREQUENCY && !@player.killed
-	      @enemies << Enemy.new(@window)
+	      @enemies << ZigZagEnemy.new(@window)
 	      @game_state.enemies_appeared += 1
         @game_state.fate = :count_reached if @game_state.enemies_appeared > MAX_ENEMIES
 	    end

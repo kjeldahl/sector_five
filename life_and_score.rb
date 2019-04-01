@@ -12,7 +12,7 @@ class LifeAndScore
 
   def draw
     @font.draw_text("Lives: #{@player.lives}", 5, 24, 1)
-    @font.draw_text("Score: #{@game_state.enemies_destroyed}", @window.width / 2 - 100, 24, 1)
+    @font.draw_text("Score: #{@game_state.enemies_destroyed}/#{@game_state.enemies_appeared}", @window.width / 2 - 150, 24, 1)
   end
 
 end
