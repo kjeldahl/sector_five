@@ -1,0 +1,22 @@
+{
+	"folders":
+	[
+		{
+			"path": "."
+		}
+	],
+	"build_systems":
+	[
+		{
+			"name": "Build",
+		    "cmd": ["ruby", "sector_five.rb"],
+		    "working_dir": "${project_path:${folder}}",
+		    "selector": "source.ruby"
+		}
+	],
+	"settings": {
+	    "tab_size": 2,
+	    "translate_tabs_to_spaces": true
+	}
+
+}
