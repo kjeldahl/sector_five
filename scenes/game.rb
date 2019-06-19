@@ -81,7 +81,7 @@ module Scenes
 	    @enemies.each do |enemy|
 	      @bullets.each do |bullet|
 	        
-	        if Gosu.distance(enemy.x, enemy.y, bullet.x, bullet.y) < enemy.radius + bullet.radius
+	        if collides?(bullet, enemy)
 	          enemies_and_bullets_to_remove << bullet
 	          enemies_and_bullets_to_remove << enemy
 	          @explosions << Explosion.new(@window, enemy.x, enemy.y, Explosion.calculate_angle(enemy,bullet))
@@ -95,11 +95,23 @@ module Scenes
 	    # Collision detection player and enemy bullets
 	    @enemy_bullets.each do |bullet|
 	      
-	      if Gosu.distance(@player.x, @player.y, bullet.x, bullet.y) < @player.radius + bullet.radius
+	      if collides?(@player, bullet)
 	        enemies_and_bullets_to_remove << bullet
 	        enemies_and_bullets_to_remove << @player
 	        @player.kill!
 	        @explosions << Explosion.new(@window, @player.x, @player.y, Explosion.calculate_angle(@player,bullet))
+          @game_state.fate = :hit_by_enemy if @player.killed?
+	      end
+
+	    end
+
+	    # Collision detection player and enemies
+	    @enemies.each do |enemy|
+	      if collides?(@player, enemy)
+	        enemies_and_bullets_to_remove << enemy
+	        enemies_and_bullets_to_remove << @player
+	        @player.kill!
+	        @explosions << Explosion.new(@window, @player.x, @player.y, Explosion.calculate_angle(@player,enemy))
           @game_state.fate = :hit_by_enemy if @player.killed?
 	      end
 
@@ -129,5 +141,10 @@ module Scenes
 	    @player.button_down(id) if @player.respond_to? :button_down
 	  end
 
+		protected
+
+		def collides?(obj1, obj2)
+			Gosu.distance(obj1.x, obj1.y, obj2.x, obj2.y) < obj1.radius + obj1.radius
+		end
 	end
 end
